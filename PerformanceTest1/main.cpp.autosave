@@ -73,8 +73,8 @@ void playIdle(){
     LCD.Clear(BLACK);
     LCD.WriteLine("Waiting for Starting Light...");
     while(determineColor(main_Cds.Value()) != CDS_RED){ //while starting light is not on
-
     }
+    
     LCD.Clear(Black);
     mainState = MAIN_SEISMOGRAPH;
 }
