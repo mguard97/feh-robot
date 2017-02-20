@@ -21,10 +21,10 @@ float pi = 3.14159265358;
 int IGWAN_COUNTS_PER_REVOLUTION = 200;
 float WHEEL_RADIUS = 3.00;
 
-float blue;
-float red;
-float unlit;
-float cds_tolerance;
+float red = 0.2;
+float blue = 0.6;
+float cds_tolerance = 0.1;
+float unlit = 1.5;
 int mainState;
 enum mainStates{
     MAIN_IDLE,
@@ -73,8 +73,8 @@ void playIdle(){
     LCD.Clear(BLACK);
     LCD.WriteLine("Waiting for Starting Light...");
     while(determineColor(main_Cds.Value()) != CDS_RED){ //while starting light is not on
-
     }
+
     LCD.Clear(Black);
     mainState = MAIN_SEISMOGRAPH;
 }
@@ -84,10 +84,10 @@ void playSeismograph(){
     mainState = MAIN_IDLE;
 }
 int determineColor(float cdsRead){
-    if(val > (blue - tolerance) && val < (blue + tolerance)){
+    if(val > (blue - cds_tolerance) && val < (blue + cds_tolerance)){
         return CDS_BLUE;
     }
-    else if(val > (red - tolerance) && val < (red + tolerance)){
+    else if(val > (red - cds_tolerance) && val < (red + cds_tolerance)){
         return CDS_RED;
     }
     else{
