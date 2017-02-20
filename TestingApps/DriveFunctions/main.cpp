@@ -15,6 +15,10 @@ FEHMotor right_motor(FEHMotor::Motor1,12.0);
 DigitalEncoder right_motor_encoder(FEHIO::P0_0);
 DigitalEncoder left_motor_encoder(FEHIO::P0_1);
 
+void driveForward(float distance);
+int distanceToCounts(float distance);
+float countsToDistance(int counts);
+
 int main(void)
 {
     float x,y;
@@ -23,7 +27,7 @@ int main(void)
     }
     Sleep(1.0);
 
-    driveForward(18.0);
+    driveForward(10.0);
 
     while(!LCD.Touch(&x,&y)){
 
@@ -33,15 +37,28 @@ int main(void)
 
 void driveForward(float distance){
     int totalCounts = distanceToCounts(distance);
+    float x,y;
     left_motor_encoder.ResetCounts();
     right_motor_encoder.ResetCounts();
-    left_motor.SetPercentage(maxSpeedPercentage);
-    right_motor.SetPercentage(maxSpeedPercentage);
-    while((left_motor.Counts() + right_motor.Counts())/2 < totalCounts){
-
+    left_motor.SetPercent(maxSpeedPercentage);
+    right_motor.SetPercent(maxSpeedPercentage);
+    LCD.WriteLine("I'm Driving");
+    while(((left_motor_encoder.Counts() + right_motor_encoder.Counts())/2 < totalCounts) && !LCD.Touch(&x,&y)){
     }
     left_motor.Stop();
     right_motor.Stop();
+    LCD.WriteLine("I'm Stopped");
+    LCD.WriteLine("Summary:");
+    LCD.Write("Distance Traveled: ");
+    LCD.Write(distance);
+    LCD.Write(" in");
+    LCD.Write("Left Motor Final: ");
+    LCD.WriteLine(left_motor_encoder.Counts());
+    LCD.WriteLine(countsToDistance(left_motor_encoder.Counts()));
+    LCD.Write("Right Motor Final: ");
+    LCD.WriteLine(right_motor_encoder.Counts());
+    LCD.WriteLine(countsToDistance(right_motor_encoder.Counts()));
+
 }
 
 int distanceToCounts(float distance){
